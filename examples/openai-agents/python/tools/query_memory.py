@@ -25,12 +25,13 @@ def query_memory(ctx: RunContextWrapper[HonchoContext], query: str) -> str:
     Raises:
         ValueError: If query is empty.
     """
-    if not query:
+    trimmed_query = query.strip()
+    if not trimmed_query:
         raise ValueError("query must not be empty")
 
     honcho = get_client()
     peer = honcho.peer(ctx.context.user_id)
-    response = peer.chat(query=query)
+    response = peer.chat(query=trimmed_query)
 
     if response:
         return str(response)

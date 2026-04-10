@@ -35,12 +35,16 @@ export const queryMemory = tool({
     { query }: { query: string },
     runContext?: RunContext<HonchoContext>
   ): Promise<string> => {
-    if (!query) throw new Error('query must not be empty');
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) throw new Error('query must not be empty');
 
-    const ctx = runContext!.context;
+    if (!runContext?.context) {
+      throw new Error('queryMemory requires a runContext with a valid context to retrieve user ID');
+    }
+
     const honcho = getClient();
-    const peer = honcho.peer(ctx.userId);
-    const response = await peer.chat(query);
+    const peer = honcho.peer(runContext.context.userId);
+    const response = await peer.chat(trimmedQuery);
 
     return response ?? 'No relevant information found in memory.';
   },

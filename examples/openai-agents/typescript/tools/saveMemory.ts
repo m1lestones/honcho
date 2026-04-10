@@ -4,6 +4,8 @@
 
 import { getClient } from './client.js';
 
+type Role = 'user' | 'assistant';
+
 /**
  * Save a single conversation turn to Honcho memory.
  *
@@ -12,17 +14,16 @@ import { getClient } from './client.js';
  *
  * @param userId - Unique identifier for the user peer.
  * @param content - Text content of the message to save.
- * @param role - Either "user" or "assistant". Any value other than "assistant"
- *               is treated as the user peer.
+ * @param role - Either "user" or "assistant".
  * @param sessionId - Identifier for the conversation session.
  * @param assistantId - Peer ID for the assistant (default: "assistant").
  * @returns A confirmation string describing what was saved.
- * @throws {Error} If content is empty.
+ * @throws {Error} If content is empty or role is not "user" or "assistant".
  */
 export async function saveMemory(
   userId: string,
   content: string,
-  role: string,
+  role: Role,
   sessionId: string,
   assistantId = 'assistant'
 ): Promise<string> {
